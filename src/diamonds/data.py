@@ -1,6 +1,8 @@
 import pandas as pd
 # Import other necessary libraries here
-
+from pathlib import Path
+import seaborn as sns
+from src.diamonds.params import DATA_PATH
 
 def load_data(cache = True) -> pd.DataFrame:
     """
@@ -16,7 +18,18 @@ def load_data(cache = True) -> pd.DataFrame:
     pd.DataFrame
         The diamonds dataset
     """
-    pass
+    cache_path = Path(DATA_PATH) / "diamonds.csv"
+
+    if cache and cache_path.exists():
+        return pd.read_csv(cache_path)
+
+    df = sns.load_dataset("diamonds")
+
+    if cache:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(cache_path, index=False)
+
+    return df
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -32,7 +45,13 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame
         The cleaned diamonds dataset
     """
-    pass
+    df_clean = df.copy()
+
+    # Remove rows containing at least one zero value
+    numeric_cols = df_clean.select_dtypes(include="number").columns
+    df_clean = df_clean[(df_clean[numeric_cols] != 0).all(axis=1)].reset_index(drop=True)
+
+    return df_clean
 
 def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -48,7 +67,14 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame
         The preprocessed diamonds dataset
     """
-    pass
+    df_preprocessed = df.copy()
+
+    # Ensure categorical columns are stored as strings
+    categorical_cols = df_preprocessed.select_dtypes(include=["category"]).columns
+    for col in categorical_cols:
+        df_preprocessed[col] = df_preprocessed[col].astype(str)
+
+    return df_preprocessed
 
 def create_X_y(df: pd.DataFrame) ->tuple[pd.DataFrame, pd.Series]:
     """
