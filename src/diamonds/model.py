@@ -15,9 +15,10 @@ from sklearn.metrics import (
     r2_score,
     mean_absolute_percentage_error,
 )
+from inspect import signature
 
 
-def create_model(model_name: str) -> BaseEstimator:
+def create_model(model_name: str, random_state: int = 42) -> BaseEstimator:
     """
     Create an untrained model with the best hyperparameters found during tuning.
 
@@ -37,7 +38,14 @@ def create_model(model_name: str) -> BaseEstimator:
 
     if len(candidates) == 0:
         raise NotImplementedError("no model found for name", model_name)
-    return candidates[0]()
+    model_class = candidates[0]
+
+    model_params = signature(model_class).parameters.keys()
+
+    if "random_state" in model_params:
+        return model_class(random_state=random_state)
+    else:
+        return model_class()
 
 
 def create_preproc() -> Pipeline:

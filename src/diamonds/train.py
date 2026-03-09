@@ -28,11 +28,13 @@ def train(
     df_cleaned = clean_data(df)
     df_preprocess = preprocess_data(df_cleaned)
     X, y = create_X_y(df_preprocess)
-    X_train, X_test, y_train, y_test = split_X_y(X, y)
+    X_train, X_test, y_train, y_test = split_X_y(
+        X, y, test_size=test_size, random_state=random_state
+    )
 
     # 2) Model + preprocessing
 
-    estimator = create_model(model_name)
+    estimator = create_model(model_name, random_state=random_state)
     pre_processing = create_preproc()
     pre_processing.fit(X_train)
     X_train_scaled = pre_processing.transform(X_train)

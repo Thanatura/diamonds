@@ -104,7 +104,7 @@ def create_X_y(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
 
 
 def split_X_y(
-    X: pd.DataFrame, y: pd.Series
+    X: pd.DataFrame, y: pd.Series, test_size: float = 0.2, random_state: int = 42
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
     """
     Create the feature matrix X and target vector y from the diamonds dataset.
@@ -119,7 +119,9 @@ def split_X_y(
     (pd.DataFrame, pd.Series)
         The feature matrix X and target vector y
     """
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=test_size, random_state=random_state
+    )
 
     return X_train, X_test, y_train, y_test
 
