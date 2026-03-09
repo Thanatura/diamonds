@@ -5,10 +5,11 @@ from diamonds.model import (
     evaluate_model,
     train_model,
 )
+from diamonds.registry import save_model
 
 
 def train(
-    model_name: str = "baseline",
+    model_name: str = "LinearRegression",
     test_size: float = 0.2,
     random_state: int = 42,
 ) -> None:
@@ -31,7 +32,7 @@ def train(
 
     # 2) Model + preprocessing
 
-    estimator = create_model("AdaBoostRegressor")
+    estimator = create_model(model_name)
     pre_processing = create_preproc()
     pre_processing.fit(X_train)
     X_train_scaled = pre_processing.transform(X_train)
@@ -43,6 +44,8 @@ def train(
     evaluate_model(estimator, X_test_scaled, y_test)
 
     # 4) Persistence
+
+    save_model(estimator, f"models/{model_name}")
 
 
 if __name__ == "__main__":

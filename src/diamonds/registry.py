@@ -6,8 +6,12 @@ import pickle
 def save_model(model: BaseEstimator, path: str) -> None:
     """Save the model to the specified path."""
     # Implement the logic to save the model (e.g., using pickle, joblib, etc.)
-    with open(path, "wb") as file:
+    full_path = f"{path}.pkl"
+
+    with open(full_path, "wb") as file:
         pickle.dump(model, file)
+
+    print(f"model saved to {full_path}")
 
 
 def load_model(path: str) -> BaseEstimator:
