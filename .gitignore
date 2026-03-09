@@ -1,0 +1,16 @@
+# Python 
+.venv/
+.python-version
+.ipynb_checkpoints/
+
+# Data
+data/
+!data/*.gitkeep
+
+# Models
+models/
+!models/.gitkeep
+
+# Env
+.env
+.envrc
