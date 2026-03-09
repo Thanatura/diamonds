@@ -48,7 +48,8 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     df_clean = df.copy()
 
     # Remove rows containing at least one zero value
-    df_clean = df_clean[(df_clean != 0).all(axis=1)].reset_index(drop=True)
+    numeric_cols = df_clean.select_dtypes(include="number").columns
+    df_clean = df_clean[(df_clean[numeric_cols] != 0).all(axis=1)].reset_index(drop=True)
 
     return df_clean
 
@@ -69,7 +70,7 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     df_preprocessed = df.copy()
 
     # Ensure categorical columns are stored as strings
-    categorical_cols = df_preprocessed.select_dtypes(include=["category", "object"]).columns
+    categorical_cols = df_preprocessed.select_dtypes(include=["category"]).columns
     for col in categorical_cols:
         df_preprocessed[col] = df_preprocessed[col].astype(str)
 
