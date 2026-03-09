@@ -10,11 +10,13 @@ This repository is a teaching project where you refactor a Jupyter notebook into
 
 ## 1. Clone the repository
 
-1. Clone this repository and move into the project directory.  
+1. Fork this repository and clone it into the project directory. Then Create a new branch for your productionizing-ml project.
 
     ```bash
-    git clone git@github.com:vivadata/diamonds.git
+    gh repo fork vivadata/diamonds
+    git clone git@github.com:<your-username>/diamonds.git
     cd diamonds
+    git branch -b <your-username>-productioninizing-ml
     ```
 
 
