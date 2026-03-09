@@ -14,3 +14,4 @@ models/
 # Env
 .env
 .envrc
+uv.lock
