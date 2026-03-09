@@ -45,6 +45,14 @@ This repository is a teaching project where you refactor a Jupyter notebook into
     ```
 
 
+1. Install the package in develop mode.
+NB : The `-e` flag is used to install the package in develop mode.
+
+    ```bash
+    pip install -e .
+    ```
+
+
 ## 3. Configure direnv
 
 1. Allow direnv in this directory (only once).  
