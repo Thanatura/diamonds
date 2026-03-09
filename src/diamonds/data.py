@@ -1,10 +1,10 @@
 import pandas as pd
-# Import other necessary libraries here
 from pathlib import Path
 import seaborn as sns
 from src.diamonds.params import DATA_PATH
 
-def load_data(cache = True) -> pd.DataFrame:
+
+def load_data(cache=True) -> pd.DataFrame:
     """
     Load the diamonds dataset.
 
@@ -31,6 +31,7 @@ def load_data(cache = True) -> pd.DataFrame:
 
     return df
 
+
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
     Clean the diamonds dataset.
@@ -49,9 +50,12 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # Remove rows containing at least one zero value
     numeric_cols = df_clean.select_dtypes(include="number").columns
-    df_clean = df_clean[(df_clean[numeric_cols] != 0).all(axis=1)].reset_index(drop=True)
+    df_clean = df_clean[(df_clean[numeric_cols] != 0).all(axis=1)].reset_index(
+        drop=True
+    )
 
     return df_clean
+
 
 def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -76,7 +80,8 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
 
     return df_preprocessed
 
-def create_X_y(df: pd.DataFrame) ->tuple[pd.DataFrame, pd.Series]:
+
+def create_X_y(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     """
     Create the feature matrix X and target vector y from the diamonds dataset.
 
@@ -90,8 +95,10 @@ def create_X_y(df: pd.DataFrame) ->tuple[pd.DataFrame, pd.Series]:
     (pd.DataFrame, pd.Series)
         The feature matrix X and target vector y
     """
-    pass
+    X = df.drop(columns=["price"])
+    y = df["price"]
 
+    return X, y
 
 
 if __name__ == "__main__":
