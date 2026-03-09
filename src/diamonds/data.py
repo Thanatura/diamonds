@@ -3,7 +3,7 @@ from pathlib import Path
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 
-from src.diamonds.params import DATA_PATH
+from diamonds.params import DATA_PATH
 
 
 def load_data(cache=True) -> pd.DataFrame:
