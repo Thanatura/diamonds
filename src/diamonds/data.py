@@ -1,6 +1,8 @@
 import pandas as pd
 from pathlib import Path
 import seaborn as sns
+from sklearn.model_selection import train_test_split
+
 from src.diamonds.params import DATA_PATH
 
 
@@ -99,6 +101,27 @@ def create_X_y(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     y = df["price"]
 
     return X, y
+
+
+def split_X_y(
+    X: pd.DataFrame, y: pd.Series
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+    """
+    Create the feature matrix X and target vector y from the diamonds dataset.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The preprocessed diamonds dataset
+
+    Returns
+    -------
+    (pd.DataFrame, pd.Series)
+        The feature matrix X and target vector y
+    """
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+
+    return X_train, X_test, y_train, y_test
 
 
 if __name__ == "__main__":
