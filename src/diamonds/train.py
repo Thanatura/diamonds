@@ -1,5 +1,3 @@
-
-
 def train(
     model_name: str = "baseline",
     test_size: float = 0.2,
@@ -15,14 +13,13 @@ def train(
     - train, evaluate, and save the trained model
     """
     # 1) Data
-  
+
     # 2) Model + preprocessing
- 
+
     # 3) Evaluation
-  
+
     # 4) Persistence
 
 
 if __name__ == "__main__":
     train()
-

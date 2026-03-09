@@ -14,3 +14,5 @@ models/
 # Env
 .env
 .envrc
+uv.lock
+__pycache__
