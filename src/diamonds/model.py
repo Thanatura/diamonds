@@ -37,7 +37,7 @@ def create_model(model_name: str) -> BaseEstimator:
 
     if len(candidates) == 0:
         raise NotImplementedError("no model found for name", model_name)
-    return candidates[0]
+    return candidates[0]()
 
 
 def create_preproc() -> Pipeline:
@@ -64,7 +64,7 @@ def create_preproc() -> Pipeline:
     ).set_output(transform="pandas")
 
 
-def train_model(model, X_train, y_train):
+def train_model(model: BaseEstimator, X_train: pd.DataFrame, y_train: pd.Series):
     """Train the model on the training data.
     Parameters
     ----------
@@ -79,7 +79,7 @@ def train_model(model, X_train, y_train):
     None
     """
     start_time = time.time()
-    model.fit(X_train, y_train)  # Train the model on the training data.
+    model.fit(X_train, y_train)
     end_time = time.time()
     print(f"Training time: {end_time - start_time} seconds")
 
