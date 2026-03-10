@@ -1,5 +1,3 @@
-
-
 setup : 
 	pip install -e . 
 
