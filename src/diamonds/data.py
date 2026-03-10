@@ -12,9 +12,7 @@ def load_data(cache=True) -> pd.DataFrame:
 
     Parameters
     ----------
-    cache : bool, optional
-        Whether to cache the dataset, by default True
-
+    
     Returns
     -------
     pd.DataFrame
@@ -59,7 +57,9 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return df_clean
 
 
-def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
+
+def preprocess_data( X: pd.DataFrame
+                    , train: bool = True) -> pd.DataFrame:
     """
     Preprocess the diamonds dataset.
 

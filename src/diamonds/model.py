@@ -17,6 +17,11 @@ from sklearn.metrics import (
 )
 from inspect import signature
 
+import loguru
+
+from diamonds.registry import save_model, load_model
+
+logger = loguru.logger
 
 def create_model(model_name: str, random_state: int = 42) -> BaseEstimator:
     """
