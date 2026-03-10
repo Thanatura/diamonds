@@ -73,14 +73,7 @@ def preprocess_data( X: pd.DataFrame
     pd.DataFrame
         The preprocessed diamonds dataset
     """
-    df_preprocessed = df.copy()
-
-    # Ensure categorical columns are stored as strings
-    categorical_cols = df_preprocessed.select_dtypes(include=["category"]).columns
-    for col in categorical_cols:
-        df_preprocessed[col] = df_preprocessed[col].astype(str)
-
-    return df_preprocessed
+    pass
 
 
 def create_X_y(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
