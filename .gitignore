@@ -1,12 +1,13 @@
-# Python 
+# Python
 .venv/
 .python-version
 .ipynb_checkpoints/
 __pycache__/
+*.py[cod]
 
 # Data
 data/
-!data/*.gitkeep
+!data/.gitkeep
 
 # Models
 models/
@@ -16,9 +17,7 @@ models/
 .env
 .envrc
 uv.lock
-__pycache__
 mlflow.db
 
-# mlflow
+# MLflow
 mlartifacts/
-
