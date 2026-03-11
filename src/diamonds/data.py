@@ -90,7 +90,10 @@ def preprocess_data( X: pd.DataFrame
     logger.info(f"Preprocessed the diamonds dataset: {X.shape} -> {df_preprocessed.shape}") 
     return df_preprocessed
 
-def create_X_y(df: pd.DataFrame) ->tuple[pd.DataFrame, pd.Series]:
+def create_X_y(df: pd.DataFrame,
+                test_size: float = 0.2,
+                random_state: int = 42,
+               ) ->tuple[pd.DataFrame, pd.Series]:
     """
     Create the feature matrix X and target vector y from the diamonds dataset.
 
@@ -107,14 +110,14 @@ def create_X_y(df: pd.DataFrame) ->tuple[pd.DataFrame, pd.Series]:
     
     X = df.drop(columns="price")
     y = df["price"]
-    X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=test_size,random_state=random_state)
-
-    return X, y
-
+    X_train, X_test, y_train, y_test = train_test_split(X, y
+                                                        , test_size=test_size
+                                                        , random_state=random_state)
+    return X_train, X_test, y_train, y_test
 
 
 if __name__ == "__main__":
-    df = load_data()
-    df_clean = clean_data(df)
+    raw_df = load_data()
+    df_clean = clean_data(raw_df)
     df_preprocessed = preprocess_data(df_clean)
-    X, y = create_X_y(df_preprocessed)
+    X_train, X_test, y_train, y_test = create_X_y(df_preprocessed)
