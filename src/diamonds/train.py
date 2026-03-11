@@ -1,69 +1,98 @@
-from diamonds.data import clean_data, create_X_y, load_data, preprocess_data, split_X_y
-from diamonds.model import (
-    create_model,
-    create_preproc,
-    evaluate_model,
-    train_model,
-)
-from diamonds.registry import save_model
-import mlflow
 import os
+
+import mlflow
+import mlflow.sklearn
+from loguru import logger
+
+from diamonds.data import clean_data, create_X_y, load_data, preprocess_data, split_X_y
+from diamonds.model import create_model, evaluate_model, train_model
+
 
 def train(
     model_name: str = "LinearRegression",
     test_size: float = 0.2,
     random_state: int = 42,
-) -> None:
+) -> dict[str, float]:
     """
-    Simple end‑to‑end pipeline:
-
-    - load and clean the raw data
-    - preprocess it and build X, y
+    End-to-end training pipeline:
+    - load and clean raw data
     - split into train / test
-    - build the model and preprocessing
-    - train, evaluate, and save the trained model
+    - preprocess train and test data
+    - train the model
+    - evaluate the model
+    - log params, metrics, and model with MLflow
+
+    Parameters
+    ----------
+    model_name : str, default="LinearRegression"
+        Name of the sklearn regressor to use.
+    test_size : float, default=0.2
+        Proportion of the dataset used for testing.
+    random_state : int, default=42
+        Random seed for reproducibility.
+
+    Returns
+    -------
+    dict[str, float]
+        Evaluation metrics on the test set.
     """
-    mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
+    tracking_uri = os.environ.get("MLFLOW_TRACKING_URI")
+    if tracking_uri:
+        mlflow.set_tracking_uri(tracking_uri)
+
     mlflow.set_experiment("Diamonds_Experiment")
 
-    # 1) Data
+    with mlflow.start_run():
+        logger.info("Loading and preparing data...")
+        df = load_data()
+        df_cleaned = clean_data(df)
 
-    df = load_data()
-    df_cleaned = clean_data(df)
-    X, y = create_X_y(df_cleaned)
-    X_train, X_test, y_train, y_test = split_X_y(
-        X, y, test_size=test_size, random_state=random_state
-    )
+        X, y = create_X_y(df_cleaned)
+        X_train, X_test, y_train, y_test = split_X_y(
+            X,
+            y,
+            test_size=test_size,
+            random_state=random_state,
+        )
 
-    # 2) Model + preprocessing
+        # Fit the preprocessor on train only, then reuse it on test
+        X_train_preprocessed = preprocess_data(X_train, train=True)
+        X_test_preprocessed = preprocess_data(X_test, train=False)
 
-    estimator = create_model(model_name, random_state=random_state)
-    params = {"model_type": model_name, **estimator.get_params()}
-    pre_processing = create_preproc()
-    pre_processing.fit(X_train)
-    X_train_scaled = pre_processing.transform(X_train)
-    X_test_scaled = pre_processing.transform(X_test)
+        logger.info(f"Creating model: {model_name}")
+        estimator = create_model(model_name, random_state=random_state)
 
-    # 3) Evaluation
+        params = {
+            "model_type": model_name,
+            "test_size": test_size,
+            "random_state": random_state,
+            **estimator.get_params(),
+        }
 
-    train_model(model=estimator, X_train=X_train_scaled, y_train=y_train)
-    metrics = evaluate_model(estimator, X_test_scaled, y_test)
-    with mlflow.start_run() as run:
+        logger.info("Training model...")
+        estimator = train_model(
+            model=estimator,
+            X_train=X_train_preprocessed,
+            y_train=y_train,
+            save=False,
+        )
+
+        logger.info("Evaluating model...")
+        metrics = evaluate_model(estimator, X_test_preprocessed, y_test)
+
         mlflow.log_params(params)
         mlflow.log_metrics(metrics)
-        mlflow.sklearn.log_model(estimator, 
-                                 name=model_name, 
-                                 registered_model_name=model_name)
 
-    client = mlflow.MlflowClient()
-    model_name = model_name
-    model_version_alias = "Best current model"
+        # In recent MLflow versions, `name` is the preferred argument for the logged model artifact.
+        mlflow.sklearn.log_model(
+            sk_model=estimator,
+            name="model",
+            registered_model_name=model_name,
+        )
 
-    # Get the model version using a model URI
-    model_uri = f"models:/{model_name}/1"
-    model = mlflow.sklearn.load_model(model_uri)
+        logger.info(f"Training finished. Metrics: {metrics}")
+        return metrics
 
-    (model)
 
 if __name__ == "__main__":
     train(model_name="RandomForestRegressor")
