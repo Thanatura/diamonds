@@ -14,6 +14,7 @@ from sklearn.metrics import (
     mean_squared_error,
     r2_score,
     mean_absolute_percentage_error,
+    root_mean_squared_error
 )
 from inspect import signature
 
@@ -147,14 +148,11 @@ def evaluate_model(model, X_test, y_test) -> dict[str, float]:
     mse = mean_squared_error(y_test, y_pred)
     r2score = r2_score(y_test, y_pred)
     mape = mean_absolute_percentage_error(y_test, y_pred)
-    print("Metrics:")
-    print(f"MAE: {mae}")
-    print(f"MSE: {mse}")
-    print(f"R2 Score: {r2score}")
-    print(f"MAPE: {mape}")
+    rmse = root_mean_squared_error(y_test, y_pred)
     return {
         "MAE": mae,
         "MSE": mse,
         "R2 Score": r2score,
         "MAPE": mape,
+        "RMSE": rmse,
     }  # Return the evaluation metrics as a dictionary.
