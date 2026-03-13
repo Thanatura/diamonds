@@ -5,7 +5,6 @@ description = "Preprocess & Train a model to predict diamond price"
 authors = [
     {name = "Your Name",email = "you@example.com"}
 ]
-readme = "README.md"
 requires-python = ">=3.11,<4.0"
 dependencies = [
     "scikit-learn (>=1.8.0,<2.0.0)",
@@ -19,6 +18,11 @@ dependencies = [
 
 [tool.poetry.group.dev.dependencies]
 notebook = "^7.5.4"
+
+
+[tool.poetry.group.api.dependencies]
+fastapi = "^0.135.1"
+locust = "^2.43.3"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

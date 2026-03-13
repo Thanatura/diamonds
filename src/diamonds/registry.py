@@ -107,4 +107,5 @@ def load_model(
 
     with open(estimator_path, "rb") as f:
         estimator = pickle.load(f)
+        logger.info(f"Model loaded from local path: {estimator_path}")
     return estimator
